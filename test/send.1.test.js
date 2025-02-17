@@ -6,7 +6,7 @@ const http = require('node:http')
 const path = require('node:path')
 const request = require('supertest')
 const { send } = require('..')
-const { shouldNotHaveHeader, createServer } = require('./utils')
+const { shouldNotHaveHeader, createServer, shouldHaveHeader } = require('./utils')
 
 // test server
 
@@ -122,7 +122,7 @@ test('send(file, options)', async function (t) {
   })
 
   await t.test('etag', async function (t) {
-    t.plan(1)
+    t.plan(2)
 
     await t.test('should support disabling etags', async function (t) {
       t.plan(1)
@@ -130,6 +130,15 @@ test('send(file, options)', async function (t) {
       await request(createServer({ etag: false, root: fixtures }))
         .get('/name.txt')
         .expect(shouldNotHaveHeader('ETag', t))
+        .expect(200)
+    })
+
+    await t.test('should support strong etags', async function (t) {
+      t.plan(1)
+
+      await request(createServer({ etag: 'strong', root: fixtures }))
+        .get('/name.txt')
+        .expect(shouldHaveHeader('ETag', t))
         .expect(200)
     })
   })

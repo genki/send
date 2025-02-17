@@ -70,7 +70,7 @@ declare namespace send {
     /**
      * Enable or disable etag generation, defaults to true.
      */
-    etag?: boolean | undefined;
+    etag?: "strong" | boolean | undefined;
 
     /**
      * If a given file doesn't exist, try appending one of the given extensions, in the given order.
